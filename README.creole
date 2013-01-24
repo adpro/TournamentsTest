@@ -1,0 +1,13 @@
+= TournamentsTest
+
+== What is TournamentsTest?
+It is simple command-line testing project for simulation tournaments's games 
+in many sports like tennis, ice-hockey, football and so on.
+
+== What are the main objectives of the project?
+Main goal is to test how to implement mechanism of sport games' tournaments 
+in Python 3.
+
+== What are the target platforms?
+TournamentsTest is written in Python 3.3, primary platform is 
+Mac OS X 10.7 (Lion), but will be tested on Ubuntu and Windows 7+.
