@@ -171,7 +171,7 @@ class SingleEliminationTournament():
         Assigns players to the tournament tree
 
         @param players_count: number of competitors in tournament
-        @param players: list of SETTreeNodes with player's objects (sorted 
+        @param players: list of SETTreeNodes with player's objects (sorted
             from the best one to the worst one
 
         '''
@@ -223,17 +223,174 @@ class SingleEliminationTournament():
         pass
 
 
+#-----------------------------------------------------------------------------
+
+
+class Competitor():
+    '''
+    Class representing match competitor - player or team
+    '''
+    def __init__(self, name=''):
+        self.name = name
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        self.__name = name
+
+
+class Score():
+    '''
+    Class for representing score for match between two competitors
+    '''
+    def __init__(self, score1=None, score2=None):
+        '''
+        Constructor
+
+        @param score1: initial score (points, goals, and so on) for first
+            competitor
+        @param score2: initial score (points, goals, and so on) for second
+            competitor
+        '''
+        self.score_competitor1 = score1
+        self.score_competitor2 = score2
+
+    @property
+    def score_competitor1(self):
+        '''Score (points, goals) for first competitor'''
+        return self.__score_competitor1
+
+    @score_competitor1.setter
+    def score_competitor1(self, value):
+        self.__score_competitor1 = value
+
+    @property
+    def score_competitor2(self):
+        '''Score (points, goals) for second competitor'''
+        return self.__score_competitor2
+
+    @score_competitor2.setter
+    def score_competitor2(self, value):
+        self.__score_competitor2 = value
+
+
+class MatchInfo():
+    '''
+    Class for storing information about match
+    '''
+    def __init__(self, score=None, can_draw=False):
+        '''
+        Constructor
+
+        @param score: initial score; if not set, is used default (zero) point
+        @param can_draw: flag, whether match can end with draw; default False
+        '''
+        self.score = score
+        self.__can_draw = can_draw
+        self.draw = False
+        self.winner = None
+        self.loser = None
+
+    @property
+    def score(self):
+        '''Property for storing score in this match.'''
+        return self.__score
+
+    @score.setter
+    def score(self, value):
+        if value is None:
+            value = 0
+        assert isinstance(value, int) or isinstance(value, float), \
+            'Score can contains Int or Float value.'
+        self.__score = value
+
+    @property
+    def can_draw(self):
+        '''Getter for can_draw property. Stores bool value, whether it is
+            possible to end match with draw
+        '''
+        return self.__can_draw
+
+
+class Match():
+    '''
+    Class representing main entities of match
+    '''
+    def __init__(self, competitor1=None, competitor2=None,
+                 next_round=None, info=None):
+        '''
+        Constructor
+
+        @param competitor1: stores pointer to the first competitor
+        @param competitor2: stores pointer to the second competitor
+        @param next_round: stores pointer to the next match in next round
+        @param info: stores pointer to the MatchInfo object
+        '''
+        self.competitor1 = competitor1
+        self.competitor2 = competitor2
+        self.next_round = next_round
+        self.info = info
+
+    def __test_competitors(self, value):
+        '''
+        Private method to testing, whether value is Competitor object
+
+        @param value: object to test whether it is instance of Competitor class
+        @return: True if value is Competitor class instance otherwise raise
+            AssertionError
+        '''
+        if value is not None:
+            assert isinstance(value, Competitor), \
+                'Object is not Competitor object.'
+        return True
+
+    @property
+    def competitor1(self):
+        '''Pointer to first Competitor object'''
+        return self.__competitor1
+
+    @competitor1.setter
+    def competitor1(self, value):
+        assert self.__test_competitors(value)
+        self.__competitor1 = value
+
+    @property
+    def competitor2(self):
+        '''Pointer to the second Competitor object.'''
+        return self.__competitor2
+
+    @competitor2.setter
+    def competitor2(self, value):
+        assert self.__test_competitors(value)
+        self.__competitor2 = value
+
+    @property
+    def next_round(self):
+        '''A pointer to the next round match. Only Final match has no one.
+        '''
+        return self.__next_round
+
+    @next_round.setter
+    def next_round(self, value):
+        if value is not None:
+            assert isinstance(value, Match), \
+                'Object is not instance of Match class.'
+        self.__next_round = value
+
+
+class SingleElimination():
+    '''
+    Represents Single elimination tournament and its structure
+    '''
+    pass
 
 
 # simple test
-players = ['A','B','C','D','E','F','G','H']
+players = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 wimbledon = SingleEliminationTournament(players)
 # prints F
 print(str(
         wimbledon.champion.competitor2.competitor1.competitor1.winner_object))
-
-
-
-
-
-
