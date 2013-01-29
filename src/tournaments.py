@@ -10,115 +10,284 @@ AUTHOR
 
 
 import math
+import random
 
 
-class SETTreeNode():
+class Competitor():
     '''
-    Represents tree structure of Single elim. tournament node.
+    Class representing match competitor - player or team
     '''
+    def __init__(self, name=''):
+        self.name = name
 
-    def __init__(self, competitor1=None,
-                 competitor2=None,
-                 next_round=None):
+    def __str__(self):
+        return 'Competitor:' + self.name
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        assert isinstance(name, str), "Name must be string."
+        self.__name = name
+
+
+class Score():
+    '''
+    Class for representing score for match between two competitors
+    '''
+    def __init__(self, score1=None, score2=None):
         '''
-        Constructor with competitors and winner
+        Constructor
+
+        @param score1: initial score (points, goals, and so on) for first
+            competitor
+        @param score2: initial score (points, goals, and so on) for second
+            competitor
+        '''
+        self.score_competitor1 = score1
+        self.score_competitor2 = score2
+
+    def __verify_score(self, score):
+        assert isinstance(score, int) or isinstance(score, float), \
+            "Part of score can be Int or Float value."
+
+    @property
+    def score_competitor1(self):
+        '''Score (points, goals) for first competitor'''
+        return self.__score_competitor1
+
+    @score_competitor1.setter
+    def score_competitor1(self, value):
+        self.__verify_score(value)
+        self.__score_competitor1 = value
+
+    @property
+    def score_competitor2(self):
+        '''Score (points, goals) for second competitor'''
+        return self.__score_competitor2
+
+    @score_competitor2.setter
+    def score_competitor2(self, value):
+        self.__verify_score(value)
+        self.__score_competitor2 = value
+
+
+class MatchInfo():
+    '''
+    Class for storing information about match
+    '''
+    def __init__(self, score=None, can_draw=False):
+        '''
+        Constructor
+
+        @param score: initial score; if not set, is used default (zero) point
+        @param can_draw: flag, whether match can end with draw; default False
+        '''
+        self.score = score
+        self.__can_draw = can_draw
+        self.draw = False
+        self.winner = None
+        self.loser = None
+
+    @property
+    def score(self):
+        '''Property for storing score in this match.'''
+        return self.__score
+
+    @score.setter
+    def score(self, value):
+        if value is None:
+            value = Score(0, 0)
+        assert isinstance(value, Score), \
+            'Score can contains only Score objects.'
+        self.__score = value
+
+    @property
+    def can_draw(self):
+        '''Getter for can_draw property. Stores bool value, whether it is
+            possible to end match with draw
+        '''
+        return self.__can_draw
+
+
+class Match():
+    '''
+    Class representing main entities of match
+    '''
+    def __init__(self, competitor1=None, competitor2=None,
+                 next_round=None, info=None):
+        '''
+        Constructor
+
+        @param competitor1: stores pointer to the first competitor
+        @param competitor2: stores pointer to the second competitor
+        @param next_round: stores pointer to the next match in next round
+        @param info: stores pointer to the MatchInfo object
         '''
         self.competitor1 = competitor1
         self.competitor2 = competitor2
         self.next_round = next_round
-        self.winner_object = None
+        self.previous_match1 = None
+        self.previous_match2 = None
+        self.info = info
 
-    def __str__(self):
-        return str(self.winner_object)
+    def __test_competitors(self, value):
+        '''
+        Private method to testing, whether value is Competitor object
+
+        @param value: object to test whether it is instance of Competitor class
+        @return: True if value is Competitor class instance otherwise raise
+            AssertionError
+        '''
+        if value is not None:
+            assert isinstance(value, Competitor), \
+                'Object is not Competitor object.'
+        return True
+
+    def __test_previous_match(self, value):
+        '''
+        Private method to testing, whether value is Match object
+
+        @param value: object to test whether it is instance of Match class
+        @return: True if value is Match class instance otherwise raise
+            AssertionError
+        '''
+        if value is not None:
+            assert isinstance(value, Match), \
+                'Previous match must be Match object.'
+        return None
 
     @property
     def competitor1(self):
-        '''
-        Contains the first match competitor.
-        '''
+        '''Pointer to first Competitor object'''
         return self.__competitor1
 
     @competitor1.setter
-    def competitor1(self, competitor):
-        self.__competitor1 = competitor
+    def competitor1(self, value):
+        assert self.__test_competitors(value)
+        self.__competitor1 = value
 
     @property
     def competitor2(self):
-        '''
-        Contains the second match competitor.
-        '''
+        '''Pointer to the second Competitor object.'''
         return self.__competitor2
 
     @competitor2.setter
-    def competitor2(self, competitor):
-        self.__competitor2 = competitor
+    def competitor2(self, value):
+        assert self.__test_competitors(value)
+        self.__competitor2 = value
+
+    @property
+    def previous_match1(self):
+        '''Store pointer to the previous match'''
+        return self.__previous_match1
+
+    @previous_match1.setter
+    def previous_match1(self, value):
+        self.__test_previous_match(value)
+        self.__previous_match1 = value
+
+    @property
+    def previous_match2(self):
+        '''Store pointer to the previous match'''
+        return self.__previous_match2
+
+    @previous_match2.setter
+    def previous_match2(self, value):
+        self.__test_previous_match(value)
+        self.__previous_match2 = value
 
     @property
     def next_round(self):
-        '''
-        Pointer to the next round
+        '''A pointer to the next round match. Only Final match has no one.
         '''
         return self.__next_round
 
     @next_round.setter
-    def next_round(self, next_round):
-        self.__next_round = next_round
+    def next_round(self, value):
+        if value is not None:
+            assert isinstance(value, Match), \
+                'Object is not instance of Match class.'
+        self.__next_round = value
 
     @property
-    def winner_object(self):
-        '''
-        Data of tree node. Contains player object (winner of a previous round
-        match).
-        '''
-        return self.__winner_object
+    def info(self):
+        '''Pointer to MatchInfo object'''
+        return self.__info
 
-    @winner_object.setter
-    def winner_object(self, winner_obj):
-        self.__winner_object = winner_obj
+    @info.setter
+    def info(self, value):
+        if value is not None:
+            assert isinstance(value, MatchInfo), \
+                'Object must be a MatchInfo object.'
+        self.__info = value
+
+    def play_match(self):
+        raise NotImplementedError()
 
 
 class SingleEliminationTournament():
     '''
     Represents Single elimination tournament and its structure
     '''
-
-    def __init__(self, players=[], compare_func=None):
+    def __init__(self, seeded_players=[], other_players=[], shuffle=True):
         '''
         Constructor
         '''
-        self.no_competitors = len(players)
-        self.champion = self.__create_tournament_tree()
-        self.__assign_players_to_tree(self.no_competitors, players)
-        self.__current_round = 0   # current round in tournament
-        self.__comp_func = compare_func  # how to compare player's objects
+        # competitors count verifications
+        players_count = len(seeded_players) + len(other_players)
+        assert players_count > 1, \
+            "Competitors count must be 2 and more (power of 2)."
+        assert math.modf(math.log2(players_count))[0] == 0.0, \
+            "Competitors count must be a power of 2."
+        self.__competitors_count = players_count
+        # seeded competitors verifications
+        self.__verify_competitors(seeded_players)
+        self.__seeded_players = tuple(seeded_players)
+        # other competitors verifications and shuffle they
+        self.__verify_competitors(other_players)
+        self.__other_players = \
+            self.__shuffle_competitors(other_players, shuffle)
+        # other actions
+        self.__current_round = 0
+        # assign players
+        self.__competitors = tuple(self.seeded_players + \
+                                   tuple(self.other_players))
+        # create tournament tree
+        self.__tournament_tree = self.__create_tournament_tree()
+        # seed competitors into tree
+        self.__seed_competitors()
 
-    def __create_tournament_tree(self):
+    def __verify_competitors(self, players=[]):
         '''
-        Helper method for creating tournament tree
+        Verifies players, that everybody is instance of Competitor object
 
-        @return: one item list for champion
+        @param players: list of players to verify
+        @return: True, if all competitors is instances of Competitor class or
+            if list is empty
         '''
-        rounds_list = []
-        # thru competitors makes node's object in rounds list
-        for i in range(int(math.log2(self.no_competitors)) + 1):
-            # make nodes list
-            round_list = [SETTreeNode() \
-                        for _ in range(self.no_competitors // (2 ** i))]
-            rounds_list.append(round_list)
-        # make interconnections between nodes (tree structure)
-        for i in range(int(math.log2(self.no_competitors))):
-            if len(rounds_list[i]) > 1:
-                for j in range(len(rounds_list[i]) // 2):
-                    k = (2 * j)
-                    rounds_list[i][k].next_round = rounds_list[i + 1][j]
-                    rounds_list[i][k + 1].next_round = rounds_list[i + 1][j]
-                    rounds_list[i + 1][j].competitor1 = rounds_list[i][k]
-                    rounds_list[i + 1][j].competitor2 = rounds_list[i][k + 1]
-        self.tournament_tree = rounds_list
-        # top list in two-dimensional list is champion
-        return rounds_list[-1][0]
+        if len(players) > 0:
+            for player in players:
+                assert isinstance(player, Competitor), \
+                    "Competitor must be instance of Competitor class."
+        return True
 
-    def __set_first_round_ranking(self, count):
+    def __shuffle_competitors(self, players=[], shuffle=True):
+        '''
+        Shuffles list of competitors for random sequence of competitors
+
+        @param players: list of competitors to shuffle
+        @param shuffle: boolean value whether function do shuffle or not
+        @return: shuffled list of competitors
+        '''
+        if shuffle:
+            return random.sample(players, len(players))
+        else:
+            return players
+
+    def __set_first_round_ranking(self):
         '''
         Makes list of competitors sorted for tournament tree from left to right
         More info:
@@ -126,14 +295,12 @@ class SingleEliminationTournament():
                 using-python-to-model-a-single-elimination-tournament
         http://en.wikipedia.org/wiki/Single-elimination_tournament
 
-        @param count: number of competitors
-
         @return: list of competitors sorted for tree
         '''
-        first_round = list(range(count))
+        first_round = list(range(self.competitors_count))
         left = []
         right = []
-        if count > 2:
+        if self.competitors_count > 2:
             left = first_round[0::4] + first_round[-1::-4]
             right = first_round[1::4] + first_round[-2::-4]
         else:
@@ -166,74 +333,90 @@ class SingleEliminationTournament():
             rightf = right[0]
         return leftf + rightf[::-1]
 
-    def __assign_players_to_tree(self, players_count, players=[]):
+    def __create_tournament_tree(self):
         '''
-        Assigns players to the tournament tree
+        Creates list for every rounds. Connects every list item between other
+        items, that connections makes tournament tree.
 
-        @param players_count: number of competitors in tournament
-        @param players: list of SETTreeNodes with player's objects (sorted 
-            from the best one to the worst one
-
+        @return: list of interconnected list items
         '''
-        ranking = self.__set_first_round_ranking(players_count)
-        #seed player into the tournament
-        for i in range(len(ranking)):
-            self.tournament_tree[0][i].winner_object = players[ranking[i]]
+        tournament_rounds = []
+        # create lists for every round
+        for i in range(int(math.log2(self.competitors_count))):
+            round_list = [Match() for _ in range(2 ** i)]
+            tournament_rounds.append(round_list)
+        # make interconnections between rounds - tournament tree
+        for i in range(int(math.log2(self.competitors_count - 1))):
+            if len(tournament_rounds[- 1 - i]) > 1:
+                for j in range(len(tournament_rounds[- 1 - i]) // 2):
+                    k = (2 * j)
+                    tournament_rounds[- 1 - i][k].next_round = \
+                        tournament_rounds[- 1 - i - 1][j]
+                    tournament_rounds[- 1 - i][k + 1].next_round = \
+                        tournament_rounds[- 1 - i - 1][j]
+                    tournament_rounds[- 1 - i - 1][j].previous_match1 = \
+                        tournament_rounds[- 1 - i][k]
+                    tournament_rounds[- 1 - i - 1][j].previous_match2 = \
+                        tournament_rounds[- 1 - i][k + 1]
+        return tournament_rounds
+
+    def __seed_competitors(self):
+        player_order = self.__set_first_round_ranking()
+        # insert competitors into right place in the tournament tree
+        # first list is last round, last list is first round
+        for i in range(len(self.__competitors) // 2):
+            self.__tournament_tree[-1][i].competitor1 = \
+                self.competitors[player_order[2 * i]]
+            self.__tournament_tree[-1][i].competitor2 = \
+                self.competitors[player_order[(2 * i) + 1]]
 
     @property
-    def no_competitors(self):
-        '''
-        Competitor count in the tournament. Must be a power of 2.
-        '''
+    def competitors_count(self):
+        '''Number of competitors in single elimination tournament'''
         return self.__competitors_count
 
-    @no_competitors.setter
-    def no_competitors(self, count):
-        assert math.modf(math.log2(count))[0] == 0.0, \
-            "Competitors count must be a power of 2."
-        self.__competitors_count = count
+    @property
+    def seeded_players(self):
+        '''Seeded competitors to the tournament'''
+        return self.__seeded_players
 
     @property
-    def champion(self):
-        '''
-        Root element of the tournament tree
-        '''
-        return self.__champion
+    def other_players(self):
+        '''List of not seeded competitors'''
+        return self.__other_players
 
-    @champion.setter
-    def champion(self, root):
-        self.__champion = root
+    @property
+    def current_round(self):
+        '''Current round of tournament from bottom to final match'''
+        return self.__current_round
+
+    @property
+    def competitors(self):
+        '''Tuple of all competitors in the tournament'''
+        return self.__competitors
 
     @property
     def tournament_tree(self):
-        '''Two-dimensional list of matches in tournament'''
         return self.__tournament_tree
 
-    @tournament_tree.setter
-    def tournament_tree(self, tree):
-        assert len(tree) >= 0, "Tournament tree is two-dimensional list."
-        self.__tournament_tree = tree
+    def play_round(self):
+        raise NotImplementedError()
 
-    def play_round_matches(self):
-        '''
-        Evaluates all the matches in current round.
-        '''
-        # TODO potrebuji vyhodnocovaci funkci, kdo je lepsi
-        #      v promenne self.__comp_func
-        pass
+#-----------------------------------------------------------------------------
 
 
-
-
-# simple test
-players = ['A','B','C','D','E','F','G','H']
-wimbledon = SingleEliminationTournament(players)
-# prints F
-print(str(
-        wimbledon.champion.competitor2.competitor1.competitor1.winner_object))
-
-
-
-
-
-
+# simple test of SE
+seeded_competitors = [Competitor('As'),
+               Competitor('Bs'),
+               Competitor('Cs')]
+other_competitors = [Competitor('D'),
+               Competitor('E'),
+               Competitor('F'),
+               Competitor('G'),
+               Competitor('H')]
+frenchopen = \
+    SingleEliminationTournament(seeded_competitors, other_competitors, False)
+# test print
+for item in frenchopen.competitors:
+    print(item)
+print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
