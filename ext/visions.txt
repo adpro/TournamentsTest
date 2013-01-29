@@ -1,0 +1,60 @@
+Classes in pseudocode
+
+
+class Competitor():
+    string name
+
+
+class Score():
+    object score_competitor1
+    object score_competitor2
+
+
+class MatchInfo():
+    Score score
+    Competitor winner
+    Competitor loser
+    bool tie
+
+
+class Match()
+    Competitor competitor1
+    Competitor competitor2
+    Match next_round
+    MatchInfo info
+
+
+
+class FootballCompetitor(Competitor):
+    int wins
+    int draws
+    int losses
+    int points
+    int games_played
+    int goals_for
+    int goals_against
+
+
+class FootballScore(Score):
+    int club1_goals
+    int club2_goals
+
+
+class FootballMatchInfo(MatchInfo):
+    int spectators
+
+
+
+class TennisCompetitor(Competitor):
+    int match_wins
+    int match_losses
+    int ranking_points
+    int money_earned
+
+
+class TennisScore(Score):
+    int competitor1_set_wins
+    int competitor2_set_wins
+    int[] sets_score    # comp1, comp2, comp1, comp2,..
+
+
