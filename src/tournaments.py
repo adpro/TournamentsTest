@@ -227,7 +227,26 @@ class Match():
         self.__info = value
 
     def play_match(self):
-        raise NotImplementedError()
+        '''
+        Runs current match - compare competitors objects
+        '''
+        values = {}
+        values[self.competitor1] = random.randrange(0, 5)
+        values[self.competitor2] = random.randrange(0, 5)
+        print(self.competitor1, 'vs', self.competitor2, '\t',\
+              values[self.competitor1], ':', values[self.competitor2])
+        if values[self.competitor1] > values[self.competitor2]:
+            # home wins
+            #  #add winner to the next round // TODO
+            print(self.competitor1, 'wins.')
+        elif values[self.competitor1] == values[self.competitor2]:
+            # draw
+            # what now ??
+            print('Draw')
+        else:
+            #away wins
+            #  #add winner to the next round // TODO
+            print(self.competitor2, 'wins.')
 
 
 class SingleEliminationTournament():
@@ -360,6 +379,9 @@ class SingleEliminationTournament():
                         tournament_rounds[- 1 - i][k]
                     tournament_rounds[- 1 - i - 1][j].previous_match2 = \
                         tournament_rounds[- 1 - i][k + 1]
+        # set current round variable to index for the first round
+        self.__current_round = len(tournament_rounds) - 1
+        # return all rounds
         return tournament_rounds
 
     def __seed_competitors(self):
@@ -402,7 +424,15 @@ class SingleEliminationTournament():
         return self.__tournament_tree
 
     def play_round(self):
-        raise NotImplementedError()
+        '''
+        Runs all games in the current round.
+        '''
+        for match in self.tournament_tree[self.__current_round]:
+            match.play_match()
+        # prepare next round index / decrease index
+        if self.__current_round > 0:
+            self.__current_round -= 1
+
 
 #-----------------------------------------------------------------------------
 
@@ -422,3 +452,6 @@ frenchopen = \
 for item in frenchopen.competitors:
     print(item)
 print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
+
+for i in range(int(math.log2(frenchopen.competitors_count))):
+    frenchopen.play_round()
