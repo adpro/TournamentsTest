@@ -13,6 +13,18 @@ AUTHOR
 
 import math
 import random
+from argparse import ArgumentError
+
+
+class MatchInfoError(LookupError):
+    '''
+    Error indicates problem, that MatchInfo object is not exists.
+    '''
+    pass
+
+
+class MatchError(Exception):
+    pass
 
 
 class Competitor():
@@ -51,6 +63,10 @@ class Score():
         self.score_competitor1 = score1
         self.score_competitor2 = score2
 
+    def __str__(self):
+        return ''.join(('(', str(self.score_competitor1), ':',
+                         str(self.score_competitor2), ')'))
+
     def __verify_score(self, score):
         assert isinstance(score, int) or isinstance(score, float), \
             "Part of score can be Int or Float value."
@@ -74,6 +90,39 @@ class Score():
     def score_competitor2(self, value):
         self.__verify_score(value)
         self.__score_competitor2 = value
+
+    def add_home_score(self, value):
+        '''
+        Adds value to home competitor score.
+
+        @param value: value to increase the home competitor score
+        '''
+        if value is None:
+            raise ArgumentError('Increment value for score is not set.')
+        self.score_competitor1 += value
+
+    def add_away_score(self, value):
+        '''
+        Adds value to away competitor score.
+
+        @param value: value to increase the away competitor score
+        '''
+        if value is None:
+            raise ArgumentError('Increment value for score is not set.')
+        self.score_competitor2 += value
+
+    def evaluate_score(self):
+        '''
+        Evaluate who is winner
+
+        @return: 1 if Home wins, -1 if Away wins, 0 if draw
+        '''
+        if self.score_competitor1 > self.score_competitor2:
+            return 1
+        elif self.score_competitor1 == self.score_competitor2:
+            return 0
+        else:
+            return -1
 
 
 class MatchInfo():
@@ -112,6 +161,37 @@ class MatchInfo():
             possible to end match with draw
         '''
         return self.__can_draw
+
+    def set_score(self, score):
+        '''
+        Sets new Score object
+        '''
+        self.score = score
+
+    def evaluate(self, competitor1, competitor2):
+        '''
+        Evaluates score and sets pointers to the winner and the loser
+        '''
+        if not isinstance(competitor1, Competitor) and \
+            not isinstance(competitor2, Competitor):
+            raise ArgumentError(competitor1, \
+                        'Competitors must be instances of Competitor class.')
+        result = self.score.evaluate_score()
+        if result == 1:
+            # home wins
+            self.winner = competitor1
+            self.loser = competitor2
+            self.draw = False
+        elif result == 0:
+            # draw
+            self.winner = None
+            self.loser = None
+            self.draw = True
+        else:
+            # away wins
+            self.winner = competitor2
+            self.loser = competitor1
+            self.draw = False
 
 
 class Match():
@@ -230,23 +310,35 @@ class Match():
         '''
         Runs current match - compare competitors objects
         '''
-        values = {}
-        values[self.competitor1] = random.randrange(0, 5)
-        values[self.competitor2] = random.randrange(0, 5)
-        print(self.competitor1, 'vs', self.competitor2, '\t',\
-              values[self.competitor1], ':', values[self.competitor2])
-        if values[self.competitor1] > values[self.competitor2]:
-            # home wins
-            #  #add winner to the next round // TODO
-            print(self.competitor1, 'wins.')
-        elif values[self.competitor1] == values[self.competitor2]:
-            # draw
-            # what now ??
-            print('Draw')
+        if self.info is None:
+            raise MatchInfoError('Pointer is not set to MatchInfo object.')
+
+        while True:
+            home = random.randrange(0, 5)
+            away = random.randrange(0, 5)
+            # result of the match can be any - draw is possible
+            if self.info.can_draw:
+                break
+            else:
+                # one competitor must win - if draw, repeat
+                if not home == away:
+                    break
+        self.info.score = Score(home, away)
+        self.info.evaluate(self.competitor1, self.competitor2)
+
+    def add_competitor(self, competitor):
+        '''
+        Adds competitor (from previous round) into current match
+        '''
+        if not isinstance(competitor, Competitor):
+            raise ArgumentError(competitor, \
+                                'It must be instance of Competitor class.')
+        if self.competitor1 == None:
+            self.competitor1 = competitor
+        elif self.competitor1 is not None and self.competitor2 == None:
+            self.competitor2 = competitor
         else:
-            #away wins
-            #  #add winner to the next round // TODO
-            print(self.competitor2, 'wins.')
+            raise MatchError('Too much competitors in one match.')
 
 
 class SingleEliminationTournament():
@@ -364,7 +456,7 @@ class SingleEliminationTournament():
         tournament_rounds = []
         # create lists for every round
         for i in range(int(math.log2(self.competitors_count))):
-            round_list = [Match() for _ in range(2 ** i)]
+            round_list = [Match(info=MatchInfo()) for _ in range(2 ** i)]
             tournament_rounds.append(round_list)
         # make interconnections between rounds - tournament tree
         for i in range(int(math.log2(self.competitors_count - 1))):
@@ -427,8 +519,17 @@ class SingleEliminationTournament():
         '''
         Runs all games in the current round.
         '''
+        print('---play round method---')
         for match in self.tournament_tree[self.__current_round]:
             match.play_match()
+
+            #print(len(self.tournament_tree[self.__current_round]))
+            print('*', match.competitor1, match.competitor2, \
+                  match.info.score, '> wins', match.info.winner)
+            # if not final match
+            if self.__current_round > 0:
+                ## add winner to the next round
+                match.next_round.add_competitor(match.info.winner)
         # prepare next round index / decrease index
         if self.__current_round > 0:
             self.__current_round -= 1
@@ -445,13 +546,25 @@ other_competitors = [Competitor('D'),
                Competitor('E'),
                Competitor('F'),
                Competitor('G'),
-               Competitor('H')]
+               Competitor('H'),
+               Competitor('I'),
+               Competitor('J'),
+               Competitor('K'),
+               Competitor('L'),
+               Competitor('M'),
+               Competitor('N'),
+               Competitor('O'),
+               Competitor('P'),
+               ]
 frenchopen = \
-    SingleEliminationTournament(seeded_competitors, other_competitors, False)
+    SingleEliminationTournament(seeded_competitors, other_competitors, True)
 # test print
+print('---Competitors---')
 for item in frenchopen.competitors:
     print(item)
+print('---Selected competitor---')
 print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
 
+print('---Play Round---')
 for i in range(int(math.log2(frenchopen.competitors_count))):
     frenchopen.play_round()
