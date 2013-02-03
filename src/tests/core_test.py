@@ -18,37 +18,50 @@ class CompetitorTestCase(unittest.TestCase):
 
     def setUp(self):
         #unittest.TestCase.setUp(self)
-        pass
+        self.people = ['Alfons', None, "Cyril", 'Dalimil']
+        self.competitors = []
 
-    def test_constructor(self):
-        player = tmt.Competitor()
-        player
-        pass
+    def tearDown(self):
+        #unittest.TestCase.tearDown(self)
+        self.people = None
+        self.competitors = None
 
     def test_competitor(self):
-        pass
+        for man in self.people:
+            self.competitors.append(tmt.Competitor(man))
+        self.competitors.append(tmt.Competitor())
+
+        self.assertEqual(self.people[0], self.competitors[0].name)
+        self.assertEqual('', self.competitors[1].name)
+        self.assertEqual('Cyril', self.competitors[2].name)
+        self.assertEqual('Dalimil', self.competitors[3].name)
+        self.assertEqual('', self.competitors[4].name)
+        self.competitors.pop()
+        self.assertEqual(len(self.people), len(self.competitors))
 
 
 class ScoreTestCase(unittest.TestCase):
 
-    def test_constructor(self):
-        pass
-
     def test_score(self):
-        pass
+        self.assertFalse(True)
 
 
 class MatchInfoTestCase(unittest.TestCase):
-    pass
+
+    def test_matchinfo(self):
+        self.assertFalse(True)
 
 
 class MatchTestCase(unittest.TestCase):
-    pass
+
+    def test_match(self):
+        self.assertFalse(True)
 
 
 class CoreTestCase(unittest.TestCase):
     '''Tests for whole core classes'''
-    pass
+    def test_core(self):
+        self.assertFalse(True)
 
 
 if __name__ == "__main__":

@@ -45,6 +45,8 @@ class Competitor():
 
     @name.setter
     def name(self, name):
+        if name is None:
+            name = ''
         assert isinstance(name, str), "Name must be string."
         self.__name = name
 
