@@ -1,3 +1,5 @@
+# coding=UTF-8
+# vim: set fileencoding=UTF-8 :
 '''
 DESCRIPTION
     Tournaments is module of classes for simulating tournaments (tennis,
@@ -537,34 +539,34 @@ class SingleEliminationTournament():
 
 #-----------------------------------------------------------------------------
 
+if __name__ == '__main__':
+    # simple test of SE
+    seeded_competitors = [Competitor('As'),
+                   Competitor('Bs'),
+                   Competitor('Cs')]
+    other_competitors = [Competitor('D'),
+                   Competitor('E'),
+                   Competitor('F'),
+                   Competitor('G'),
+                   Competitor('H'),
+                   Competitor('I'),
+                   Competitor('J'),
+                   Competitor('K'),
+                   Competitor('L'),
+                   Competitor('M'),
+                   Competitor('N'),
+                   Competitor('O'),
+                   Competitor('P'),
+                   ]
+    frenchopen = \
+        SingleEliminationTournament(seeded_competitors, other_competitors, True)
+    # test print
+    print('---Competitors---')
+    for item in frenchopen.competitors:
+        print(item)
+    print('---Selected competitor---')
+    print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
 
-# simple test of SE
-seeded_competitors = [Competitor('As'),
-               Competitor('Bs'),
-               Competitor('Cs')]
-other_competitors = [Competitor('D'),
-               Competitor('E'),
-               Competitor('F'),
-               Competitor('G'),
-               Competitor('H'),
-               Competitor('I'),
-               Competitor('J'),
-               Competitor('K'),
-               Competitor('L'),
-               Competitor('M'),
-               Competitor('N'),
-               Competitor('O'),
-               Competitor('P'),
-               ]
-frenchopen = \
-    SingleEliminationTournament(seeded_competitors, other_competitors, True)
-# test print
-print('---Competitors---')
-for item in frenchopen.competitors:
-    print(item)
-print('---Selected competitor---')
-print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
-
-print('---Play Round---')
-for i in range(int(math.log2(frenchopen.competitors_count))):
-    frenchopen.play_round()
+    print('---Play Round---')
+    for i in range(int(math.log2(frenchopen.competitors_count))):
+        frenchopen.play_round()
