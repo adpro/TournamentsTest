@@ -15,7 +15,6 @@ AUTHOR
 
 import math
 import random
-from argparse import ArgumentError
 
 
 class MatchInfoError(LookupError):
@@ -102,7 +101,8 @@ class Score():
         @param value: value to increase the home competitor score
         '''
         if value is None:
-            raise ArgumentError('Increment value for score is not set.')
+            raise ValueError('Increment value for score is not set.')
+        self.__verify_score(value)
         self.score_competitor1 += value
 
     def add_away_score(self, value):
@@ -112,7 +112,8 @@ class Score():
         @param value: value to increase the away competitor score
         '''
         if value is None:
-            raise ArgumentError('Increment value for score is not set.')
+            raise ValueError('Increment value for score is not set.')
+        self.__verify_score(value)
         self.score_competitor2 += value
 
     def evaluate_score(self):
@@ -178,7 +179,7 @@ class MatchInfo():
         '''
         if not isinstance(competitor1, Competitor) and \
             not isinstance(competitor2, Competitor):
-            raise ArgumentError(competitor1, \
+            raise ValueError(competitor1, \
                         'Competitors must be instances of Competitor class.')
         result = self.score.evaluate_score()
         if result == 1:
@@ -335,7 +336,7 @@ class Match():
         Adds competitor (from previous round) into current match
         '''
         if not isinstance(competitor, Competitor):
-            raise ArgumentError(competitor, \
+            raise ValueError(competitor, \
                                 'It must be instance of Competitor class.')
         if self.competitor1 == None:
             self.competitor1 = competitor
