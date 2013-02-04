@@ -175,14 +175,46 @@ class MatchTestCase(unittest.TestCase):
 
     def setUp(self):
         #unittest.TestCase.setUp(self)
-        pass
+        self.players = [tmt.Competitor('A'),
+                        tmt.Competitor('B'),
+                        tmt.Competitor('C'),
+                        tmt.Competitor('D')]
+        self.mi = tmt.MatchInfo()
 
     def tearDown(self):
         #unittest.TestCase.tearDown(self)
-        pass
+        self.players = None
 
     def test_match(self):
-        raise NotImplementedError
+        def process1():
+            tmt.Match()
+            return True
+
+        def process2():
+            tmt.Match('a', 'b')
+
+        def process3():
+            tmt.Match(None, None, None, self.mi)
+
+        self.assertTrue(process1)
+        self.assertRaises(AssertionError, process2)
+        self.assertTrue(process3)
+
+        match1 = tmt.Match(self.players[0], self.players[1], None, \
+                           tmt.MatchInfo())
+        match2 = tmt.Match(self.players[2], self.players[3], None, \
+                           tmt.MatchInfo(can_draw=True))
+        #match1.info.score.add_home_score(3)
+        #match1.info.score.add_away_score(1)
+        match1.play_match()
+        self.assertIsInstance(match1.info.winner, tmt.Competitor)
+        self.assertFalse(match1.info.draw)
+        while not match2.info.draw:
+            match2.play_match()
+        self.assertEqual(match2.info.winner, match2.info.loser)
+        match1.next_round = match2
+        match2.previous_match2 = match1
+        self.assertEqual(match1.next_round.previous_match2, match1)
 
 
 if __name__ == "__main__":
