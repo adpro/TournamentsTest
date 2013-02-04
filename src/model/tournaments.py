@@ -524,13 +524,14 @@ class SingleEliminationTournament():
         '''
         Runs all games in the current round.
         '''
-        print('---play round method---')
+        #print('---play round method---')
         for match in self.tournament_tree[self.__current_round]:
             match.play_match()
 
             #print(len(self.tournament_tree[self.__current_round]))
-            print('*', match.competitor1, match.competitor2, \
-                  match.info.score, '> wins', match.info.winner)
+            #print('*', match.competitor1, match.competitor2, \
+            #      match.info.score, '> wins', match.info.winner)
+
             # if not final match
             if self.__current_round > 0:
                 ## add winner to the next round
@@ -570,8 +571,8 @@ if __name__ == '__main__':
         print(item)
     print('---Selected competitor---')
     first = frenchopen.tournament_tree[0][0]
-    print('final.prev2.prev1.comp1', \
-          first.previous_match2.previous_match1.competitor1)
+    print('final.prev2.prev2.prev2.comp2', \
+          first.previous_match2.previous_match2.previous_match2.competitor2)
 
     print('---Play Round---')
     for i in range(int(math.log2(frenchopen.competitors_count))):
