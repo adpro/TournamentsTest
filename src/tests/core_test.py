@@ -120,19 +120,68 @@ class ScoreTestCase(unittest.TestCase):
 
 class MatchInfoTestCase(unittest.TestCase):
 
+    def setUp(self):
+        #unittest.TestCase.setUp(self)
+        self.mi_list = [tmt.MatchInfo(),
+                   tmt.MatchInfo(tmt.Score(0, 0)),
+                   tmt.MatchInfo(tmt.Score(-1, 0)),
+                   tmt.MatchInfo(tmt.Score(65.003, 65.003)),
+                   tmt.MatchInfo(tmt.Score(65.003, 65.003), True),
+                   tmt.MatchInfo(tmt.Score(2, 1), True)
+                   ]
+
+    def tearDown(self):
+        #unittest.TestCase.tearDown(self)
+        self.mi_list = None
+
     def test_matchinfo(self):
-        raise NotImplementedError
+        def process():
+            self.mi_list[0].evaluate(0, 0)
+
+        self.assertEqual(self.mi_list[0].score.score_competitor1, 0)
+        self.assertEqual(self.mi_list[1].score.score_competitor1, 0)
+        self.assertEqual(self.mi_list[2].score.score_competitor1, -1)
+        self.assertEqual(self.mi_list[3].score.score_competitor1, 65.003)
+        self.assertEqual(self.mi_list[4].score.score_competitor1, 65.003)
+        self.assertEqual(self.mi_list[5].score.score_competitor1, 2)
+        for i in (0, 1, 3, 4):
+            self.assertFalse(self.mi_list[i].draw)
+            if i < 4:
+                self.assertFalse(self.mi_list[i].can_draw)
+            else:
+                self.assertTrue(self.mi_list[i].can_draw)
+            self.assertEqual(self.mi_list[i].winner, \
+                             self.mi_list[i].loser)
+            self.assertEqual(self.mi_list[i].winner, None)
+            self.mi_list[i].evaluate(tmt.Competitor('a'), tmt.Competitor('b'))
+            self.assertEqual(self.mi_list[i].winner, \
+                             self.mi_list[i].loser)
+            self.assertEqual(self.mi_list[i].winner, None)
+
+        self.assertRaises(ValueError, process)
+        self.assertEqual(self.mi_list[2].winner, \
+                         self.mi_list[2].loser)
+        self.assertEqual(self.mi_list[2].winner, None)
+        self.mi_list[2].evaluate(tmt.Competitor('a'), tmt.Competitor('b'))
+        self.assertNotEqual(self.mi_list[2].winner, \
+                         self.mi_list[2].loser)
+        self.assertNotEqual(self.mi_list[2].winner, None)
+        self.assertNotEqual(self.mi_list[2].loser, None)
+        self.assertIsInstance(self.mi_list[2].winner, tmt.Competitor)
+        self.assertIsInstance(self.mi_list[2].loser, tmt.Competitor)
 
 
 class MatchTestCase(unittest.TestCase):
 
+    def setUp(self):
+        #unittest.TestCase.setUp(self)
+        pass
+
+    def tearDown(self):
+        #unittest.TestCase.tearDown(self)
+        pass
+
     def test_match(self):
-        raise NotImplementedError
-
-
-class CoreTestCase(unittest.TestCase):
-    '''Tests for whole core classes'''
-    def test_core(self):
         raise NotImplementedError
 
 

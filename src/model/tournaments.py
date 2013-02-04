@@ -562,13 +562,16 @@ if __name__ == '__main__':
                    Competitor('P'),
                    ]
     frenchopen = \
-        SingleEliminationTournament(seeded_competitors, other_competitors, True)
+        SingleEliminationTournament(seeded_competitors, \
+                                    other_competitors, True)
     # test print
     print('---Competitors---')
     for item in frenchopen.competitors:
         print(item)
     print('---Selected competitor---')
-    print('final.prev2.prev1.comp1', frenchopen.tournament_tree[0][0].previous_match2.previous_match1.competitor1)
+    first = frenchopen.tournament_tree[0][0]
+    print('final.prev2.prev1.comp1', \
+          first.previous_match2.previous_match1.competitor1)
 
     print('---Play Round---')
     for i in range(int(math.log2(frenchopen.competitors_count))):
