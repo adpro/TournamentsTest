@@ -2,8 +2,8 @@
 # vim: set fileencoding=UTF-8 :
 '''
 DESCRIPTION
-    Tournaments is module of classes for simulating tournaments (tennis,
-    football, hockey, etc.)
+    TennisModel is sample module of classes for simulating tennis tournaments.
+    Contains business logic of tennis Single Elimination Tournaments.
 LICENSE
     TournamentsTest by Aleš Daniel is licensed under a Creative Commons
     Attribution-NonCommercial 3.0 Unported License.
