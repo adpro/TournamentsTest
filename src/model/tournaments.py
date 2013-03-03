@@ -129,6 +129,15 @@ class Score():
         else:
             return -1
 
+    def get_max_score(self):
+        '''
+        Return bigger score value of the competitors score
+        Example: Score(3, 5) returns 5.
+
+        @return: maximum number from score numbers
+        '''
+        return max((self.score_competitor1, self.score_competitor2))
+
 
 class MatchInfo():
     '''
@@ -451,6 +460,9 @@ class SingleEliminationTournament():
             rightf = right[0]
         return leftf + rightf[::-1]
 
+    def _init_round_list(self, i):
+        return [Match(info=MatchInfo()) for _ in range(2 ** i)]
+
     def __create_tournament_tree(self):
         '''
         Creates list for every rounds. Connects every list item between other
@@ -461,7 +473,7 @@ class SingleEliminationTournament():
         tournament_rounds = []
         # create lists for every round
         for i in range(int(math.log2(self.competitors_count))):
-            round_list = [Match(info=MatchInfo()) for _ in range(2 ** i)]
+            round_list = self._init_round_list(i)
             tournament_rounds.append(round_list)
         # make interconnections between rounds - tournament tree
         for i in range(int(math.log2(self.competitors_count - 1))):
@@ -539,41 +551,3 @@ class SingleEliminationTournament():
         # prepare next round index / decrease index
         if self.__current_round > 0:
             self.__current_round -= 1
-
-
-#-----------------------------------------------------------------------------
-
-if __name__ == '__main__':
-    # simple test of SE
-    seeded_competitors = [Competitor('As'),
-                   Competitor('Bs'),
-                   Competitor('Cs')]
-    other_competitors = [Competitor('D'),
-                   Competitor('E'),
-                   Competitor('F'),
-                   Competitor('G'),
-                   Competitor('H'),
-                   Competitor('I'),
-                   Competitor('J'),
-                   Competitor('K'),
-                   Competitor('L'),
-                   Competitor('M'),
-                   Competitor('N'),
-                   Competitor('O'),
-                   Competitor('P'),
-                   ]
-    frenchopen = \
-        SingleEliminationTournament(seeded_competitors, \
-                                    other_competitors, True)
-    # test print
-    print('---Competitors---')
-    for item in frenchopen.competitors:
-        print(item)
-    print('---Selected competitor---')
-    first = frenchopen.tournament_tree[0][0]
-    print('final.prev2.prev2.prev2.comp2', \
-          first.previous_match2.previous_match2.previous_match2.competitor2)
-
-    print('---Play Round---')
-    for i in range(int(math.log2(frenchopen.competitors_count))):
-        frenchopen.play_round()

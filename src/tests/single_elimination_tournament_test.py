@@ -9,8 +9,8 @@ AUTHOR
     adpro  (Ales Daniel)
 '''
 import unittest
-from model import tournaments as tmt
 import math
+from model import tournaments as tmt
 
 
 class SingleEliminationTestCase(unittest.TestCase):
