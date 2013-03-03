@@ -13,60 +13,70 @@ AUTHOR
     adpro (Ales Daniel)
 '''
 import math
-import model.tournaments as tmt
+from random import randrange
 import examples.TennisTournament.tennis_model as tm
+import examples.TennisTournament.tennis_view as tv
 
 
 class TennisCli():
     '''
-    classdocs
+    Main class for command-line interface for tennis tournaments example.
     '''
 
     def __init__(self):
         '''
         Constructor
         '''
-        pass
+        self.view_SET = tv.TennisSingleEliminationTournamentView()
 
     def run(self):
         '''
-        This method will be deleted or reimplemented into MVC-like code
+        Runs all method for tournaments to show, how we can use it.
         '''
 
         #
         # Some not MVC like code
         #
 
-        seeded_competitors = [tm.TennisPlayer('As'),
-                   tm.TennisPlayer('Bs'),
-                   tm.TennisPlayer('Cs')]
-        other_competitors = [tm.TennisPlayer('D'),
-                       tm.TennisPlayer('E'),
-                       tm.TennisPlayer('F'),
-                       tm.TennisPlayer('G'),
-                       tm.TennisPlayer('H'),
-                       tm.TennisPlayer('I'),
-                       tm.TennisPlayer('J'),
-                       tm.TennisPlayer('K'),
-                       tm.TennisPlayer('L'),
-                       tm.TennisPlayer('M'),
-                       tm.TennisPlayer('N'),
-                       tm.TennisPlayer('O'),
-                       tm.TennisPlayer('P'),
+        seeded_competitors = [tm.TennisPlayer('As', 7, 9, 8),
+                   tm.TennisPlayer('Bs', 8, 8, 8),
+                   tm.TennisPlayer('Cs', 9, 7, 9)]
+        other_competitors = [tm.TennisPlayer('D', 6, 8, 9),
+                       tm.TennisPlayer('E', 9, 7, 7),
+                       tm.TennisPlayer('F', 7, 9, 7),
+                       tm.TennisPlayer('G', 8, 8, 7),
+                       tm.TennisPlayer('H', 5, 9, 9),
+                       tm.TennisPlayer('I', 6, 8, 7),
+                       tm.TennisPlayer('J', 7, 7, 6),
+                       tm.TennisPlayer('K', 1, 1, 1),
+                       tm.TennisPlayer('L', randrange(1, 10), \
+                                            randrange(1, 10),
+                                            randrange(1, 10)),
+                       tm.TennisPlayer('M', randrange(1, 10), \
+                                            randrange(1, 10),
+                                            randrange(1, 10)),
+                       tm.TennisPlayer('N', randrange(1, 10), \
+                                            randrange(1, 10),
+                                            randrange(1, 10)),
+                       tm.TennisPlayer('O', randrange(1, 10), \
+                                            randrange(1, 10),
+                                            randrange(1, 10)),
+                       tm.TennisPlayer('P', randrange(1, 10), \
+                                            randrange(1, 10),
+                                            randrange(1, 10))
                        ]
         frenchopen = \
-            tmt.SingleEliminationTournament(seeded_competitors, \
-                                        other_competitors, True)
-        # test print
-        print('---tmt.Competitors---')
-        for item in frenchopen.competitors:
-            print(item)
-        print('---Selected competitor---')
-        first = frenchopen.tournament_tree[0][0]
-        match = first.previous_match2.previous_match2.previous_match2
-        print('final.prev2.prev2.prev2.comp2', \
-              match.competitor2)
+            tm.TennisSET(seeded_competitors, \
+                        other_competitors, \
+                        True)
+        assert isinstance(frenchopen, tm.TennisSET)
 
-        print('---Play Round---')
-        for _ in range(int(math.log2(frenchopen.competitors_count))):
+        # test print
+        self.view_SET.print_SET_header()
+        self.view_SET.print_players(frenchopen.competitors)
+
+        for i in range(int(math.log2(frenchopen.competitors_count))):
+            self.view_SET.print_round_header(i)
             frenchopen.play_round()
+            self.view_SET.print_round_results(\
+                                frenchopen.tournament_tree[-1 - i])

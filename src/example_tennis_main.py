@@ -10,9 +10,9 @@ LICENSE
 AUTHOR
     adpro (Ales Daniel)
 '''
-import controller.cli as cli
+import examples.TennisTournament.tennis_controller as cli
 
 
 if __name__ == '__main__':
-    cmd = cli.Cli()
+    cmd = cli.TennisCli()
     cmd.run()

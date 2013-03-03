@@ -460,6 +460,9 @@ class SingleEliminationTournament():
             rightf = right[0]
         return leftf + rightf[::-1]
 
+    def _init_round_list(self, i):
+        return [Match(info=MatchInfo()) for _ in range(2 ** i)]
+
     def __create_tournament_tree(self):
         '''
         Creates list for every rounds. Connects every list item between other
@@ -470,7 +473,7 @@ class SingleEliminationTournament():
         tournament_rounds = []
         # create lists for every round
         for i in range(int(math.log2(self.competitors_count))):
-            round_list = [Match(info=MatchInfo()) for _ in range(2 ** i)]
+            round_list = self._init_round_list(i)
             tournament_rounds.append(round_list)
         # make interconnections between rounds - tournament tree
         for i in range(int(math.log2(self.competitors_count - 1))):

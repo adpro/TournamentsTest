@@ -34,9 +34,13 @@ class TennisPlayer(tmt.Competitor):
         '''
         Constructor
         '''
-        super.__init__(name)
+        super().__init__(name)
+        self.ability = ability
         self.forehand = fh
         self.backhend = bh
+
+    def __str__(self):
+        return "TennisPlayer:" + self.name
 
     @property
     def ability(self):
@@ -91,15 +95,15 @@ class TennisGameScore(tmt.Score):
             elif self.score_competitor1 < self.score_competitor2:
                 return -1
         else:
-            print("*** Some change in tennis game eval", first, second)
+            return 0
 
 
 class TennisMatchScore(tmt.Score):
     '''
     Sample representation of tennis match score with individual sets scores.
     '''
-    def __init__(self):
-        super().__init__()
+    def __init__(self, score1=None, score2=None):
+        super().__init__(score1, score2)
         self.set_scores = []
 
     def add_set_score(self, set_score):
@@ -119,8 +123,14 @@ class TennisMatch(tmt.Match):
         @return: 1 if game winner is home player, 2 if winner is away player
         '''
         while True:
-            home = random.randrange(0, 5)
-            away = random.randrange(0, 5)
+            home = random.randrange(1, 6) \
+                    + self.competitor1.ability \
+                    + self.competitor1.forehand \
+                    + self.competitor1.backhend
+            away = random.randrange(1, 6) \
+                    + self.competitor2.ability \
+                    + self.competitor2.forehand \
+                    + self.competitor2.backhend
             if home != away:
                 break
         if home > away:
@@ -161,3 +171,12 @@ class TennisMatch(tmt.Match):
                 # match ended
                 self.info.score = match_score
                 self.info.evaluate(self.competitor1, self.competitor2)
+                break
+
+
+class TennisSET(tmt.SingleEliminationTournament):
+    '''
+    Custom implementation for Tennis example
+    '''
+    def _init_round_list(self, i):
+        return [TennisMatch(info=tmt.MatchInfo()) for _ in range(2 ** i)]
