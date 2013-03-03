@@ -94,6 +94,19 @@ class TennisGameScore(tmt.Score):
             print("*** Some change in tennis game eval", first, second)
 
 
+class TennisMatchScore(tmt.Score):
+    '''
+    Sample representation of tennis match score with individual sets scores.
+    '''
+    def __init__(self):
+        super().__init__()
+        self.set_scores = []
+
+    def add_set_score(self, set_score):
+        assert isinstance(set_score, TennisGameScore)
+        self.set_scores.append(set_score)
+
+
 class TennisMatch(tmt.Match):
     '''
     Custom implementation of tennis match
@@ -124,13 +137,10 @@ class TennisMatch(tmt.Match):
         if self.info is None:
             raise tmt.MatchInfoError('Pointer is not set to MatchInfo object.')
 
-        ''' change this code '''
-        # make new score with MatchInfo
         # for every set:
         # for every game evaluate players properties and change set score
-        # after every set change score object
-        # something else ?
-        match_score = tmt.Score(0, 0)
+        # after every set change score object for sets
+        match_score = TennisMatchScore(0, 0)
         while True:
             set_score = TennisGameScore(0, 0)
             while True:
@@ -145,6 +155,7 @@ class TennisMatch(tmt.Match):
                         match_score.add_home_score(1)
                     elif state == -1:
                         match_score.add_away_score(1)
+                    match_score.add_set_score(set_score)
                     break
             if match_score.get_max_score() == sets:
                 # match ended
