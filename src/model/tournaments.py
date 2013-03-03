@@ -129,6 +129,15 @@ class Score():
         else:
             return -1
 
+    def get_max_score(self):
+        '''
+        Return bigger score value of the competitors score
+        Example: Score(3, 5) returns 5.
+
+        @return: maximum number from score numbers
+        '''
+        return max((self.score_competitor1, self.score_competitor2))
+
 
 class MatchInfo():
     '''

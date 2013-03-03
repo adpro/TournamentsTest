@@ -55,9 +55,11 @@ class ScoreTestCase(unittest.TestCase):
         score = tmt.Score(-1, -4)
         self.assertEqual(score.score_competitor1, -1)
         self.assertEqual(score.score_competitor2, -4)
+        self.assertEqual(score.get_max_score(), -1)
 
         score = tmt.Score(54, 0.987654321)
         self.assertEqual(score.score_competitor1, 54)
+        self.assertEqual(score.get_max_score(), 54)
         self.assertGreater(1, score.score_competitor2)
         self.assertIsInstance(score.score_competitor1, int)
         self.assertIsInstance(score.score_competitor2, float)
