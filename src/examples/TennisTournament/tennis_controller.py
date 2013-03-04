@@ -38,16 +38,16 @@ class TennisCli():
         # Some not MVC like code
         #
 
-        seeded_competitors = [tm.TennisPlayer('As', 7, 9, 8),
+        seeded_competitors = [tm.TennisPlayer('As', 8, 9, 8),
                    tm.TennisPlayer('Bs', 8, 8, 8),
                    tm.TennisPlayer('Cs', 9, 7, 9)]
-        other_competitors = [tm.TennisPlayer('D', 6, 8, 9),
+        other_competitors = [tm.TennisPlayer('D', 7, 9, 9),
                        tm.TennisPlayer('E', 9, 7, 7),
                        tm.TennisPlayer('F', 7, 9, 7),
                        tm.TennisPlayer('G', 8, 8, 7),
                        tm.TennisPlayer('H', 5, 9, 9),
-                       tm.TennisPlayer('I', 6, 8, 7),
-                       tm.TennisPlayer('J', 7, 7, 6),
+                       tm.TennisPlayer('I', 7, 8, 7),
+                       tm.TennisPlayer('J', 9, 7, 6),
                        tm.TennisPlayer('K', 1, 1, 1),
                        tm.TennisPlayer('L', randrange(1, 10), \
                                             randrange(1, 10),

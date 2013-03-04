@@ -17,11 +17,12 @@ import examples.TennisTournament.tennis_model as tm
 class TennisPlayerView():
     @staticmethod
     def print_player(player):
-        print("TennisPlayer> {0} Stats:{1} {2} {3}".format(
+        print("TennisPlayer> {0} Stats:{1} {2} {3} ({4})".format(
                 player.name,
                 player.ability,
                 player.forehand,
-                player.backhend
+                player.backhend,
+                player.ability + player.forehand + player.backhend
                 ))
 
 
