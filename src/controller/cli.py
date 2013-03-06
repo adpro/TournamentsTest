@@ -13,6 +13,8 @@ AUTHOR
 '''
 import math
 import model.tournaments as tmt
+import view.core_view as cview
+import view.SET_view
 
 
 class Cli():
@@ -30,10 +32,6 @@ class Cli():
         '''
         This method will be deleted or reimplemented into MVC-like code
         '''
-
-        #
-        # Some not MVC like code
-        #
 
         seeded_competitors = [tmt.Competitor('As'),
                    tmt.Competitor('Bs'),
@@ -55,16 +53,17 @@ class Cli():
         frenchopen = \
             tmt.SingleEliminationTournament(seeded_competitors, \
                                         other_competitors, True)
-        # test print
-        print('---tmt.Competitors---')
+        cview.CoreView.show_text('---tmt.Competitors---')
         for item in frenchopen.competitors:
-            print(item)
-        print('---Selected competitor---')
+            cview.CompetitorView.show_name(item)
+        cview.CoreView.show_text('---Selected competitor---')
         first = frenchopen.tournament_tree[0][0]
         match = first.previous_match2.previous_match2.previous_match2
-        print('final.prev2.prev2.prev2.comp2', \
-              match.competitor2)
+        cview.CoreView.show_text("final.prev2.prev2.prev2.comp2")
+        cview.CompetitorView.show_name(match.competitor2)
 
-        print('---Play Round---')
-        for _ in range(int(math.log2(frenchopen.competitors_count))):
+        for i in range(int(math.log2(frenchopen.competitors_count))):
+            cview.CoreView.show_text('---Play Round---')
             frenchopen.play_round()
+            for match in frenchopen.tournament_tree[-1 - i]:
+                cview.MatchView.show_match_competitors_w_results(match)
