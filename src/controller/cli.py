@@ -14,7 +14,7 @@ AUTHOR
 import math
 import model.tournaments as tmt
 import view.core_view as cview
-import view.SET_view
+import view.SET_view as setview
 
 
 class Cli():
@@ -53,9 +53,15 @@ class Cli():
         frenchopen = \
             tmt.SingleEliminationTournament(seeded_competitors, \
                                         other_competitors, True)
-        cview.CoreView.show_text('---tmt.Competitors---')
-        for item in frenchopen.competitors:
-            cview.CompetitorView.show_name(item)
+        setview.SETView.show_SET_header()
+        setview.SETView.show_not_seeded_competitors(
+                    frenchopen.seeded_players,
+                    True)
+        setview.SETView.show_not_seeded_competitors(
+                    frenchopen.other_players)
+        #cview.CoreView.show_text('---tmt.Competitors---')
+        #for item in frenchopen.competitors:
+        #    cview.CompetitorView.show_name(item)
         cview.CoreView.show_text('---Selected competitor---')
         first = frenchopen.tournament_tree[0][0]
         match = first.previous_match2.previous_match2.previous_match2
@@ -63,7 +69,7 @@ class Cli():
         cview.CompetitorView.show_name(match.competitor2)
 
         for i in range(int(math.log2(frenchopen.competitors_count))):
-            cview.CoreView.show_text('---Play Round---')
+            setview.SETView.show_round_header()
             frenchopen.play_round()
             for match in frenchopen.tournament_tree[-1 - i]:
                 cview.MatchView.show_match_competitors_w_results(match)

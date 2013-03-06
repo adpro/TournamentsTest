@@ -29,6 +29,7 @@ class CompetitorView():
     @staticmethod
     def get_name(competitor):
         '''
+        @param competitor: Competitor object
         @return: string representation of competitor for terminal
         '''
         return competitor.name
@@ -37,6 +38,8 @@ class CompetitorView():
     def show_name(competitor):
         '''
         Prints competitor name
+
+        @param competitor: Competitor object
         '''
         CoreView.show_text(CompetitorView.get_name(competitor))
 
@@ -48,6 +51,7 @@ class ScoreView():
     @staticmethod
     def get_score_string(score):
         '''
+        @param score: Score object
         @return: string representation of score object
         '''
         return "{0}:{1}".format(score.score_competitor1,
@@ -57,6 +61,8 @@ class ScoreView():
     def show_score(score):
         '''
         Prints score object into the terminal
+
+        @param score: Score object
         '''
         CoreView.show_text(ScoreView.get_score_string(score))
 
@@ -76,6 +82,7 @@ class MatchView():
     @staticmethod
     def get_match_competitors(match):
         '''
+        @param match: Match object
         @return: competitors string for terminal
         '''
         return "{0} - {1}".format(
@@ -89,6 +96,7 @@ class MatchView():
     @staticmethod
     def get_match_competitors_w_results(match):
         '''
+        @param match: Match object
         @return: Match result with info about competitors
         '''
         return "{0}\t{1}".format(
