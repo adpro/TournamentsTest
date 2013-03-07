@@ -387,6 +387,10 @@ class SingleEliminationTournament():
         # seed competitors into tree
         self.__seed_competitors()
 
+        # set fraction info (final, semifinal, ..)
+        self.__fraction_info = []
+        self._init_fraction_info()
+
     def __verify_competitors(self, players=[]):
         '''
         Verifies players, that everybody is instance of Competitor object
@@ -503,6 +507,28 @@ class SingleEliminationTournament():
             self.__tournament_tree[-1][i].competitor2 = \
                 self.competitors[player_order[(2 * i) + 1]]
 
+    def _init_fraction_info(self):
+        '''
+        Initialize list with name of tournament round name
+        '''
+        rounds_count = int(math.log2(self.competitors_count))
+        default = ["Final", "Semi-Final", "Quarter-Final"]
+
+        self.fraction_info = default[0:rounds_count]
+        if rounds_count > 3:
+            next_rounds = []
+            for i in range(rounds_count - 3):
+                if i % 10 == 0:
+                    next_rounds.append("{0}st Round".format(i + 1))
+                elif i % 10 == 1:
+                    next_rounds.append("{0}nd Round".format(i + 1))
+                elif i % 10 == 2:
+                    next_rounds.append("{0}rd Round".format(i + 1))
+                else:
+                    next_rounds.append("{0}th Round".format(i + 1))
+        self.fraction_info = next_rounds[::-1]
+        #self.__fraction_info = self.__fraction_info[::-1]
+
     @property
     def competitors_count(self):
         '''Number of competitors in single elimination tournament'''
@@ -531,6 +557,25 @@ class SingleEliminationTournament():
     @property
     def tournament_tree(self):
         return self.__tournament_tree
+
+    @property
+    def fraction_info(self):
+        '''Info about fraction of tournament'''
+        return self.__fraction_info
+
+    @fraction_info.setter
+    def fraction_info(self, value):
+        assert isinstance(value, tuple) or isinstance(value, list), \
+            'Fraction info must be a list or a tuple object.'
+        self.__fraction_info.extend(value)
+
+    def get_current_fraction_info(self):
+        '''
+        Get name of fraction of tournament.
+
+        @return: string with name of fraction like 'Final' or 'Quarter-Final'
+        '''
+        return self.fraction_info[self.current_round]
 
     def play_round(self):
         '''

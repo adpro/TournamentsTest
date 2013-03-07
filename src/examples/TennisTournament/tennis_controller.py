@@ -76,7 +76,8 @@ class TennisCli():
         self.view_SET.print_players(frenchopen.competitors)
 
         for i in range(int(math.log2(frenchopen.competitors_count))):
-            self.view_SET.print_round_header(i)
+            self.view_SET.print_round_header(
+                    frenchopen.get_current_fraction_info())
             frenchopen.play_round()
             self.view_SET.print_round_results(\
                                 frenchopen.tournament_tree[-1 - i])

@@ -59,8 +59,8 @@ class TennisSingleEliminationTournamentView():
             assert isinstance(player, tm.TennisPlayer)
             TennisPlayerView.print_player(player)
 
-    def print_round_header(self, i):
-        print("* Play Round", i)
+    def print_round_header(self, info):
+        print("* {0} *".format(info))
 
     def print_round_results(self, matches):
         print("* Round results *")

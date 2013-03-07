@@ -28,12 +28,12 @@ class SETView():
         cv.CoreView.show_text(SETView.get_SET_header())
 
     @staticmethod
-    def get_round_header():
-        return "* Round *"
+    def get_round_header(info):
+        return "* {0} *".format(info)
 
     @staticmethod
-    def show_round_header():
-        cv.CoreView.show_text(SETView.get_round_header())
+    def show_round_header(info):
+        cv.CoreView.show_text(SETView.get_round_header(info))
 
     @staticmethod
     def show_round_matches(round_matches):
