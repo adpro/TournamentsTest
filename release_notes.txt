@@ -1,0 +1,13 @@
+TournamentsTest Release Notes
+=============================
+
+v0.1.1
++ Added feature for round name / round identification (Final, 4th Round, etc.)
++ Added release_notes.txt file (this one :)
+
+
+v0.1
++ Added basic features to simulate Single Elimination Tournament.
++ It's MVC-like command-line tool.
++ Added simple example for tennis tournament.
++ Added unit tests for basic testing.
