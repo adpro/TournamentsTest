@@ -11,3 +11,24 @@ in Python 3.
 == What are the target platforms?
 TournamentsTest is written in Python 3.3, primary platform is 
 Mac OS X 10.7 (Lion), but will be tested on Ubuntu and Windows 7+.
+
+== How to use?
+If you invoke Python 3.3 by 'python3' command, use this method:
+{{{
+python3 tournament_main.py
+}}}
+If you want to run example, try this:
+{{{
+python3 example_tennis_main.py
+}}}
+
+== Actual version
+Release version is 0.1.1.
+
+== Which tournament types are implemented?
+In latest release is implemented:
+* core
+* Single Elimination Tournament
+
+== More information about features
+Please, read release_notes.txt for further information.
