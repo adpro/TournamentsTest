@@ -84,7 +84,7 @@ class Cli():
         cview.CoreView.show_text("final.prev2.prev1.prev2.prev1.prev2.comp2")
         cview.CompetitorView.show_name(match.competitor2)
 
-        for i in range(int(math.log2(frenchopen.competitors_count))):
+        for i in range(int(math.log(frenchopen.competitors_count,2))):
             setview.SETView.show_round_header(
                 frenchopen.get_current_fraction_info())
             frenchopen.play_round()

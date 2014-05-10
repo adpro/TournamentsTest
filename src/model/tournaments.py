@@ -367,7 +367,7 @@ class SingleEliminationTournament():
         players_count = len(seeded_players) + len(other_players)
         assert players_count > 1, \
             "Competitors count must be 2 and more (power of 2)."
-        assert math.modf(math.log2(players_count))[0] == 0.0, \
+        assert math.modf(math.log(players_count,2))[0] == 0.0, \
             "Competitors count must be a power of 2."
         self.__competitors_count = players_count
         # seeded competitors verifications
@@ -476,11 +476,11 @@ class SingleEliminationTournament():
         '''
         tournament_rounds = []
         # create lists for every round
-        for i in range(int(math.log2(self.competitors_count))):
+        for i in range(int(math.log(self.competitors_count,2))):
             round_list = self._init_round_list(i)
             tournament_rounds.append(round_list)
         # make interconnections between rounds - tournament tree
-        for i in range(int(math.log2(self.competitors_count - 1))):
+        for i in range(int(math.log(self.competitors_count - 1,2))):
             if len(tournament_rounds[- 1 - i]) > 1:
                 for j in range(len(tournament_rounds[- 1 - i]) // 2):
                     k = (2 * j)
@@ -511,7 +511,7 @@ class SingleEliminationTournament():
         '''
         Initialize list with name of tournament round name
         '''
-        rounds_count = int(math.log2(self.competitors_count))
+        rounds_count = int(math.log(self.competitors_count,2))
         default = ["Final", "Semi-Final", "Quarter-Final"]
 
         self.fraction_info = default[0:rounds_count]
