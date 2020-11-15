@@ -1,6 +1,10 @@
 TournamentsTest Release Notes
 =============================
 
+v0.2
++ Add MIT license
+
+
 v0.1.1
 + Added feature for round name / round identification (Final, 4th Round, etc.)
 + Added release_notes.txt file (this one :)

@@ -3,10 +3,6 @@
 '''
 DESCRIPTION
     Tournaments game main file.
-LICENSE
-    What licence is provided?
-AUTHOR
-    adpro  (Ales Daniel)
 '''
 import unittest
 import math

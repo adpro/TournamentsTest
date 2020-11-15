@@ -3,12 +3,6 @@
 '''
 DESCRIPTION
     Unit test file for unit tests for core classes in Tournaments.
-LICENSE
-    TournamentsTest by Aleš Daniel is licensed under a Creative Commons
-    Attribution-NonCommercial 3.0 Unported License.
-    http://creativecommons.org/licenses/by-nc/3.0/
-AUTHOR
-    adpro (Ales Daniel)
 '''
 import unittest
 from model import tournaments as tmt

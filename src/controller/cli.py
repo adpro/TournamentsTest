@@ -4,12 +4,6 @@
 DESCRIPTION
     Tournaments is module of classes for simulating tournaments (tennis,
     football, hockey, etc.)
-LICENSE
-    TournamentsTest by Aleš Daniel is licensed under a Creative Commons
-    Attribution-NonCommercial 3.0 Unported License.
-    http://creativecommons.org/licenses/by-nc/3.0/
-AUTHOR
-    adpro (Ales Daniel)
 '''
 import math
 import model.tournaments as tmt
@@ -84,7 +78,7 @@ class Cli():
         cview.CoreView.show_text("final.prev2.prev1.prev2.prev1.prev2.comp2")
         cview.CompetitorView.show_name(match.competitor2)
 
-        for i in range(int(math.log2(frenchopen.competitors_count))):
+        for i in range(int(math.log(frenchopen.competitors_count,2))):
             setview.SETView.show_round_header(
                 frenchopen.get_current_fraction_info())
             frenchopen.play_round()
